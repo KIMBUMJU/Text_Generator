@@ -1,0 +1,100 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>텍스트 번역 시스템</title>
+    <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+    <style>
+        body {
+            font-family: 'Arial', sans-serif; /* 깔끔하고 읽기 쉬운 글씨체 사용 */
+            background-color: #f4f4f9; /* 배경색을 부드러운 회색조로 설정 */
+            margin: 40px auto;
+            width: 80%;
+            max-width: 800px;
+        }
+
+        h1 {
+            color: #333;
+            text-align: center;
+        }
+
+        textarea, select, button {
+            width: 100%; /* 입력창과 버튼의 폭을 동일하게 조정 */
+            padding: 10px;
+            margin-top: 10px;
+            border-radius: 5px; /* 모서리를 둥글게 처리 */
+            border: 1px solid #ccc;
+        }
+
+        button {
+            background-color: #4CAF50; /* 버튼색상 */
+            color: white;
+            font-size: 16px;
+            cursor: pointer; /* 마우스 오버시 커서 변경 */
+        }
+
+        button:hover {
+            background-color: #45a049; /* 버튼 호버시 색상 변경 */
+        }
+
+        #result {
+            background-color: #fff;
+            border: 1px solid #ddd;
+            padding: 15px;
+            margin-top: 20px;
+            color: #333;
+        }
+
+        pre {
+            background-color: #eef;
+            padding: 15px;
+            border-radius: 5px; /* 예시 텍스트 박스 모서리 둥글게 */
+        }
+    </style>
+</head>
+<body>
+    <h1>텍스트 번역 시스템</h1>
+    <textarea id="inputText" rows="10" cols="50" placeholder="번역할 텍스트를 입력해주세요."></textarea><br>
+    <select id="targetLang">
+        <option value="ko">한국어</option>
+        <option value="en">영어</option>
+        <option value="ja">일본어</option>
+        <option value="zh">중국어</option>
+        <option value="es">스페인어</option>
+        <option value="fr">프랑스어</option>
+    </select>
+    <button onclick="translateText()">번역하기</button>
+    <div id="result"></div>
+    <a href="/"><button>홈으로</button></a>
+
+    <h2>예시 텍스트:</h2>
+    <pre>
+Artificial Intelligence (AI) refers to computer programs or systems that artificially implement human learning abilities, 
+reasoning abilities, perceptual abilities, and more. Recently, the definition of AI has expanded to encompass 'systems 
+that implement intellectual abilities unique to humans, such as creativity, judgment, and problem-solving skills, which 
+have been exclusively human domains'. Recent AI technology is attracting attention as a key technology leading the 
+Fourth Industrial Revolution, combining with big data, Internet of Things (IoT), and cloud computing. In particular, 
+with the development of deep learning technology, breakthrough performance improvements are being made in various 
+fields such as image recognition, speech recognition, and natural language processing, and based on this, it is being 
+applied to various industries such as autonomous vehicles, medical diagnosis, and financial services.
+    </pre>
+
+    <script>
+        function translateText() {
+            const text = document.getElementById('inputText').value;
+            const targetLang = document.getElementById('targetLang').value;
+            const resultDiv = document.getElementById('result');
+            resultDiv.innerHTML = '번역 중...';
+
+            axios.post('/process_translation', { text: text, target_lang: targetLang })
+            .then(function (response) {
+                resultDiv.innerHTML = `<h2>번역 결과 (${response.data.target_lang_name}):</h2><p>${response.data.translated_text}</p>`;
+            })
+            .catch(function (error) {
+                resultDiv.innerHTML = '오류가 발생했습니다: ' + error;
+            });
+        }
+    </script>
+</body>
+</html>
